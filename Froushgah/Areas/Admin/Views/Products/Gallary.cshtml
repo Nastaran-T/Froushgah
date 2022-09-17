@@ -1,0 +1,87 @@
+﻿@model DataLayer.Product_Galleries
+@using DataLayer
+
+@{
+    ViewBag.Title = "گالری تصاویر محصولات";
+}
+
+@*<h2>گالری تصاویر محصولات</h2>*@
+
+<div class="row">
+    @using (Html.BeginForm("Gallary", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.ProductID)
+
+        <div class="col-md-4">
+            <div class="form-horizontal">
+               
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImageGallery, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="file" name="ImageUp" />
+                        @Html.ValidationMessageFor(model => model.ImageGallery, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value=" ثبت تصویر" class="btn btn-primary" />
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            @{
+                List<Product_Galleries> galleries = ViewBag.ProductGallery;
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th>تصویر</th>
+                        <th>عنوان</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Gallery in galleries)
+                    {
+                        <tr id="Gallery_@Gallery.GalleryID">
+
+                            <td ><img src="~/images/ProductImage/Thumbnail/@Gallery.ImageGallery" class="thumbnail" /></td>
+                            <td >@Gallery.Title</td>
+                            <td >
+                                <a class="btn btn-danger btn-xs" onclick="DeleteGallery(@Gallery.GalleryID)">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    }
+                </table>
+            }
+        </div>
+    }
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script src="~/Content/js/Product_Gallery.js"></script>
+
+

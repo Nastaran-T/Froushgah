@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DataLayer.Product_Groups>
+
+<section class="border-radius category-side">
+    <header><h3> دسته بندی ها </h3></header>
+    <article>
+        <ul class="category-menu">
+            @foreach (var groups in Model.Where(x => x.ParentID == null))
+            {
+            <li>
+                <h2><a href="">@groups.GroupTitle</a></h2>
+
+                @if (Model.Any(x => x.ParentID == groups.ParentID))
+                {
+                <ul class="child-category-menu">
+                    @foreach (var subGroups in Model.Where(x => x.ParentID == groups.GroupID))
+                    {
+                        <li><h2><a href="">@subGroups.GroupTitle</a> <span>(0)</span></h2></li>
+                     
+                    }
+
+                </ul>
+
+                }
+
+            </li>
+            }
+
+        </ul>
+    </article>
+</section>

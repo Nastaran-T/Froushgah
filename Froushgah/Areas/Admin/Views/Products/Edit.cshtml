@@ -1,0 +1,163 @@
+﻿@model DataLayer.Products
+@using DataLayer
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>ویرایش محصول جدید</h2>
+<div class="row">
+    @using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(x => x.ProductID)
+        @Html.HiddenFor(x => x.ImageProduct)
+        @Html.HiddenFor(x => x.CreateDateProduct)
+        <div class=" col-md-8">
+            @Html.AntiForgeryToken()
+
+            @if (ViewBag.ErrorSelectedGroups == true)
+            {
+                <div class="alert alert-danger">لطفا گروه محصول را انتخاب کنید</div>
+            }
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TitleProduct, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TitleProduct, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TitleProduct, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ShortDescriptionProduct, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ShortDescriptionProduct, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ShortDescriptionProduct, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TextProduct, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TextProduct, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TextProduct, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PriceProduct, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PriceProduct, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PriceProduct, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <span class="control-label col-md-2"><b>کلمات کلیدی</b></span>
+                    <div class="col-md-10">
+                        <input type="text" name="tags" class="form-control" value="@ViewBag.Tags" placeholder="کلمات کلیدی را با , جدا کنید" />
+
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="ویرایش محصول" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">انتخاب تصویر</div>
+                <div class="panel-body">
+                    <img id="imgPreviewProduct" src="~/images/ProductImage/@Model.ImageProduct " class="thumbnail" style="margin: 8px auto " width="215" height="215" />
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ImageProduct, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="file" id="imageProduct" name="imageProduct" />
+                            @Html.ValidationMessageFor(model => model.ImageProduct, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">انتخاب گروه</div>
+                <div class="panel-body">
+                    @{
+                        List<Product_Selected_Groups> selected_Groups = ViewBag.SelectedGroups;
+                        List<Product_Groups> groups = ViewBag.ProductGroups;
+                        <ul>
+                            @foreach (var Groups in groups.Where(x => x.ParentID == null))
+                            {
+                                <li>
+                                    <input type="checkbox" name="selectedGroups" @((selected_Groups.Any(x => x.GroupID == Groups.GroupID)) ? "checked" : "") value="@Groups.GroupID" /><span>@Groups.GroupTitle</span>
+                                    @if (groups.Any(g => g.ParentID == Groups.GroupID))
+                                    {
+                                        <ul>
+                                            @foreach (var subGroups in groups.Where(x => x.ParentID == Groups.GroupID))
+                                            {
+                                                <li>
+                                                    <input type="checkbox" name="selectedGroups" @(selected_Groups.Any(x => x.GroupID == subGroups.GroupID) ? "checked" : "") value="@subGroups.GroupID" /><span>@subGroups.GroupTitle</span>
+                                                </li>
+                                            }
+
+                                        </ul>
+
+                                    }
+
+
+                                </li>
+
+
+                            }
+                        </ul>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+<div>
+    @Html.ActionLink("بازگشت به لیست محصولات", "Index")
+</div>
+
+
+
+@section scripts
+    {
+    <script src="~/Content/js/Product.js"></script>
+
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script src="/ckeditor/adapters/jquery.js"></script>
+    <script src="~/Content/js/ckEditor.js"></script>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
